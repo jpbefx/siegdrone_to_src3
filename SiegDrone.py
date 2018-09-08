@@ -49,7 +49,7 @@ drone.reset()
 # Give me everything...fast
 drone.useMDemoMode(False) 
 # Packets, which shall be decoded                                                     
-drone.getNDpackage(["time","pressure_raw","altitude","magneto","wifi", "hdvideo_stream"])  
+drone.getNDpackage(["time", "pressure_raw", "altitude","magneto", "wifi", "hdvideo_stream"])  
 # Give it some time to awake fully after reset     
 time.sleep(1.0)                                                              
 
