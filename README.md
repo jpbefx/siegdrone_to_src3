@@ -25,7 +25,7 @@ Plug in battery -> Wait for all clear -> Connect to ARDrone network -> Connect P
     Shoulder:    L1 = LED PATTERN        R1 = ANIMATE! PATTERN
 
     SPECIAL:    
-    Share:    Set Megneto Trim (Must be in flight!)
+    Share:    Set Magneto Trim (Must be in flight!)
     Option:    Set Drone Soft Reset (Must be on ground!)
     *** PLAYSTATION BUTTON = ENDS THE RUNNING STATE TO EXIT THE PROGRAM!
                             ***    BE ON THE GROUND WHEN PRESSED!
