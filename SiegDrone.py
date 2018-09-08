@@ -35,7 +35,6 @@
 ######
 
 import time, sys
-import time, sys
 import ps_drone
 import pygame
 
