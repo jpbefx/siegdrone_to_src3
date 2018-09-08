@@ -1,6 +1,8 @@
-# siegdrone
+A project with the AR Drone 2.0 Elite, ps_drone and py-drone programs in Python
 
-A project with the AR Drone 2.0 Elite, py-drone and ps-drone programs in Python
+You will need to install the pip 'pygame' and have a PlayStation 4 DS controller.
+
+Plug in battery -> Wait for all clear -> Connect to ARDrone network -> Connect PS4 Controller -> Run "python siegdrone.py"
 
 #    siegdrone.py writtten by Greg Siegfried
 #    Sources used were:
