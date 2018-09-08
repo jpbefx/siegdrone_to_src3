@@ -35,6 +35,7 @@
 ######
 
 import time, sys
+import time, sys
 import ps_drone
 import pygame
 
@@ -48,7 +49,7 @@ drone.reset()
 # Give me everything...fast
 drone.useMDemoMode(False) 
 # Packets, which shall be decoded                                                     
-drone.getNDpackage(["demo","pressure_raw","altitude","magneto","wifi"])  
+drone.getNDpackage(["time","pressure_raw","altitude","magneto","wifi", "hdvideo_stream"])  
 # Give it some time to awake fully after reset     
 time.sleep(1.0)                                                              
 
@@ -186,20 +187,23 @@ def handle_events():
             drone.animval -= 1
     return False
 
+##### reduces ps4 controller joystick sensitivity ####
+def smooth_axis_input(value):
+    if abs(value) < 0.1:
+        return 0.0
+    return value
+
 #### process moving the drone ####
 def handle_movement():
     #### MOVE ####
-
-    valueAD = controller.get_axis(0)
-    valueWS = controller.get_axis(1) * -1
+    valueAD = smooth_axis_input(controller.get_axis(0))
+    valueWS = smooth_axis_input(controller.get_axis(1) * -1)
 
     #### UP and DOWN ####
-
-    valueUpDn = controller.get_axis(4) * -1
+    valueUpDn = smooth_axis_input(controller.get_axis(4) * -1)
 
     #### ROTATE
-
-    valueLfRt = controller.get_axis(3)
+    valueLfRt = smooth_axis_input(controller.get_axis(3))
 
     #### Tell the drone to move ####
     if drone.isFlying:
@@ -217,14 +221,16 @@ def draw():
 
     # output speed information
     font = pygame.font.SysFont("impact", 25)
-    ledLabel = font.render("LED ID:  {}".format(drone.ledval), 1, BLUE)
-    animLabel = font.render("ANIM ID:  {}".format(drone.animval), 1, BLUE)
-    batLabel = font.render("Battery:  {}%".format(drone.getBattery()[0]), 1, BLUE)
-    flyLabel = font.render("In Flight? :  {}".format(drone.isFlying), 1, BLUE)
+    ledLabel = font.render("LED ID (def= 9):  {}".format(drone.ledval), 1, BLUE)
+    animLabel = font.render("ANIM ID (def= 17):  {}".format(drone.animval), 1, BLUE)
+    flyLabel = font.render("IN FLIGHT?----> {}".format(drone.isFlying), 1, BLUE)
+    bat1Label = font.render("BATTERY--%--->    {}%".format(drone.getBattery()[0]), 1, BLUE)
+    bat2Label = font.render("BATTERY--OK-->    {}".format(drone.getBattery()[1]), 1, BLUE)
     DISPLAY.blit(ledLabel, (10, HEIGHT/10 + 30 * 1))
     DISPLAY.blit(animLabel, (10, HEIGHT/10 + 30 * 2))
-    DISPLAY.blit(batLabel, (10, HEIGHT/10 + 30 * 3))
-    DISPLAY.blit(flyLabel, (10, HEIGHT/10 + 30 * 4))
+    DISPLAY.blit(flyLabel, (310, HEIGHT/10 + 30 * 1))
+    DISPLAY.blit(bat1Label, (310, HEIGHT/10 + 30 * 2))
+    DISPLAY.blit(bat2Label, (310, HEIGHT/10 + 30 * 3))
 
     # draw joysticks
     pygame.draw.rect(DISPLAY, BLACK, (0, HEIGHT / 2, WIDTH, HEIGHT / 2))
@@ -248,6 +254,5 @@ while drone.Running:
 print "#### Shutting Down ####"
 time.sleep(1)
 drone.shutdown()
-
 
 
