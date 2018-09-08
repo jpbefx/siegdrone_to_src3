@@ -1,4 +1,4 @@
-A project with the AR Drone 2.0 Elite, ps_drone and py-drone programs in Python
+A project with the AR Drone 2.0 Elite, ps_drone and pydrone programs in Python
 
 You will need to install the pip 'pygame' and have a PlayStation 4 DS controller.
 
