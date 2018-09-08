@@ -15,7 +15,7 @@ Plug in battery -> Wait for all clear -> Connect to ARDrone network -> Connect P
          (w)+(c) Jacob Laney MIT 2016
          Project homepage: https://github.com/JacobLaney/py-drone
 
-    This project tries to use the pygames as input and feedback for the user.
+    This project tries to use the pygame as input and feedback for the user.
     The current button configuration is:
     Pad:
     Down/Up = -/+ Animation Options             Triangle = Doggy Nod
