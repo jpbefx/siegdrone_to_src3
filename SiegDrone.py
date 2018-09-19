@@ -12,11 +12,14 @@
 #    This project tries to use the pygames as input and feedback for the user.
 #    The current button configuration is:
 #    Pad:
-#    Down/Up = -/+ Animation Options             Triangle = Doggy Nod
-#    Left/Right = -/+ Led Options       Square = Doggy Hop    Circle = Doggy Wag
-#                                                eXe = Takeoff/Land
+#    Down/Up = -/+ Animation Options             Triangle = FRONT-FLIP
+#    Left/Right = -/+ Led Options       Square = LEFT-FLIP    Circle = RIGHT-FLIP
+#                                                eXe = BACK-FLIP
 #
-#    Shoulder:    L1 = LED PATTERN        R1 = CHANGE SPEED! (Used in Air Only)
+#    Shoulder:    L1 = LED PATTERN        R1 = TAKEOFF/LANDING
+#    
+#    LEFT-CLICK JOYSTICK: NOT USED
+#    RIGHT-CLICK JOYSTICK: Set's the new drone speed value.
 #
 #    SPECIAL:    
 #    Share:    Set Megneto Trim (Must be in flight!)
@@ -51,7 +54,7 @@ drone.useMDemoMode(False)
 # Packets, which shall be decoded                                                     
 drone.getNDpackage(["demo", "time","pressure_raw","altitude","magneto","wifi", "hdvideo_stream"]) 
 # Packages to add to Decode
-drone.addNDpackage(["all"]) 
+#drone.addNDpackage(["all"]) 
 # Give it some time to awake fully after reset     
 time.sleep(1.0)                                                              
 
@@ -71,7 +74,7 @@ drone.showVideo()
 time.sleep(1.0) 
 
 # Set Drone Speed.
-drone.setSpeed(0.3)
+drone.setSpeed(drone.speedval)
 
 #### init the display ####
 pygame.init()
@@ -103,85 +106,89 @@ def handle_events():
         if e.type == pygame.QUIT:
             print "QUIT"
             return True
-        if e.type == pygame.KEYUP:
-            if e.key == pygame.K_SPACE:
-                drone.kill()
-                print "#### Trying to kill drone! ####"
         if e.type == pygame.JOYBUTTONUP:
             if e.button == 0: # X button
-                if drone.isFlying == False:
-                    print "#### X = TAKING OFF ####"
-                    drone.takeoff()
-                    drone.led(9,1.5,3) 
-                    time.sleep(1)
-                    drone.isFlying = True
+                if drone.isFlying == True:
+                    print "#### X = BACK-FLIP##"
+                    drone.anim(17,15)
                 else:
-                    print "#### X = LANDING ####"
-                    drone.land()
-                    drone.led(3,1.5,3)
-                    time.sleep(1)
-                    drone.isFlying = False                       
+                    print "#### X = DRONE NOT FLYING! ####"
+                    drone.led(2,1.5,5)
+                    time.sleep(1)                       
             elif e.button == 1: # Circle Button
                 if drone.isFlying == True:
-                    print "#### CIRCLE = WAG ####"
-                    drone.doggyWag()
+                    print "#### CIRCLE = RIGHT-FLIP ####"
+                    drone.anim(19,15)
                 else:
                     print "#### CIRCLE = DRONE NOT FLYING! ####"
-                    drone.led(2,1.5,3)
+                    drone.led(2,1.5,5)
                     time.sleep(1)
             elif e.button == 2: # Triangle Button
                 if drone.isFlying == True:
-                    print "#### TRIANGLE = NOD ####"
-                    drone.doggyNod()
+                    print "#### TRIANGLE = FRONT-FLIP ####"
+                    drone.anim(16,15)
                 else:
                     print "#### TRIANGLE = DRONE NOT FLYING! ####"
-                    drone.led(2,1.5,3)
+                    drone.led(2,1.5,5)
                     time.sleep(1)
             elif e.button == 3: # Square Button
                 if drone.isFlying == True:
-                    print "#### SQUARE = HOP ####"
-                    drone.doggyHop()
+                    print "#### SQUARE = LEFT-FLIP ####"
+                    drone.anim(18,15)
                 else:
                     print "#### SQUARE = DRONE NOT FLYING! ####"
-                    drone.led(2,1.5,3)
+                    drone.led(2,1.5,5)
                     time.sleep(1)
             elif e.button == 4: # L1 Button
                 print "#### L1 = EXECUTE LEDS & STOP! ####"
                 drone.stop()
                 drone.led(drone.ledval, 1.5, 3)                               
             elif e.button == 5: # R1 Button
-                if drone.isFlying == True:
-                    print "#### R1 = CHANGE SPEED ####"
-                    drone.setSpeed(drone.speedval)
-                    time.sleep(1)
+                if drone.isFlying == False:
+                    print "#### R1 = TAKING OFF ####"
+                    drone.led(9,1.5,5) 
+                    time.sleep(2)
+                    drone.takeoff()
+                    drone.isFlying = True
                 else:
-                    print "#### R1 = DRONE NOT FLYING! ####"
-                    drone.led(2,1.5,3)
-                    time.sleep(1)
+                    print "#### R1 = LANDING ####"
+                    drone.led(3,1.5,3)
+                    time.sleep(0.5)
+                    drone.land()
+                    drone.isFlying = False
             elif e.button == 8: # SHARE Button
                 if drone.isFlying == False:
                     print "#### SHARE = Soft Reset ####"
-                    drone.led(7, 1.5, 3)
+                    drone.led(7, 1.5, 1)
                     drone.reset()
                     time.sleep(1)
                     drone.reconnectNavData()
-                    drone.led(8, 1.5, 3)
+                    drone.led(8, 1.5, 1)
                     time.sleep(1)
                 else:
                     print "#### SHARE = Soft Reset Not Allowed ####"             
             elif e.button == 9: # OPTIONS Button  
                 if drone.isFlying == True:
                     print "#### OPTIONS = Magnetometer Trim ####"
-                    drone.led(9,1.5,3)
+                    drone.led(9,1.5,5)
                     drone.mtrim()
                 else:
                     print "#### OPTIONS = MagTrim Reset Not Allowed ####"
-                    drone.led(2,1.5,3)
+                    drone.led(2,1.5,5)
                     time.sleep(1)
             elif e.button == 10: # PLAYSTATION Button 
                 drone.Running = False
-                time.sleep(0.5) 
+                time.sleep(1) 
                 print "#### Exiting Program ####"
+            elif e.button == 12: # CLICK-IN RIGHTJOYSTICK
+                if drone.isFlying == True:
+                    print "#### RJSC = CHANGE SPEED ####"
+                    drone.setSpeed(drone.speedval)
+                    time.sleep(1)
+                else:
+                    print "#### RJSC = DRONE NOT FLYING! ####"
+                    drone.led(2,1.5,5)
+                    time.sleep(1)
     (x,y) = controller.get_hat(0)
     if x == -1:
         if drone.ledval - 1 > -1:
@@ -211,7 +218,6 @@ def handle_movement():
 
     #### UP and DOWN ####
     valueUpDn = smooth_axis_input(controller.get_axis(4) * -1)
-
     #### ROTATE
     valueLfRt = smooth_axis_input(controller.get_axis(3))
 
@@ -231,7 +237,7 @@ def draw():
 
     #### output speed, led, battery information
     font = pygame.font.SysFont("impact", 25)
-    speedLabel = font.render("SPEED-X (def=0.2):  {}".format(drone.speedval), 1, BLUE)
+    speedLabel = font.render("SPEED-X (def=0.3):  {}".format(drone.speedval), 1, BLUE)
     ledLabel = font.render("LED ID (def=9):  {}".format(drone.ledval), 1, BLUE)
     flyLabel = font.render("IN FLIGHT?----> {}".format(drone.isFlying), 1, BLUE)
     bat1Label = font.render("BATTERY----> {}%".format(drone.getBattery()[0]), 1, BLUE)
