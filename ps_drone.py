@@ -103,7 +103,7 @@ class Drone(object):
         self.__pPurpleStr = "\033[95m"
         self.__pLineUpStr = "\033[1A"
         self.ledval = 9 # RED RING CHASE
-        self.animval = 6 # SPIN CLOCKWISE
+        self.speedval = 0.3 # default is usualy 0.2
 
     ###### Connect to the drone and start all procedures
     def startup(self):
